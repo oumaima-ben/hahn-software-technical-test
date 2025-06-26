@@ -44,18 +44,8 @@ CREATE TABLE order_items (
                              CONSTRAINT fk_product FOREIGN KEY(product_id) REFERENCES products(id) ON DELETE SET NULL
 );
 
--- Seeding the database with demo data ----------------------------
 
-INSERT INTO users (first_name, last_name, email, adresse, password, role)
-SELECT 'Admin', 'User', 'admin@example.com', '123 Admin Lane', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07M2o9TeiVufa2dGmm', 'ADMIN'
-WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'admin@example.com');
-
-INSERT INTO users (first_name, last_name, email, adresse, password, role)
-SELECT 'user', 'user', 'user@example.com', 'user User user', '$2a$10$8.UnVuG9HHgffUDAlk8qfOuVGkqRzgVymGe07M2o9TeiVufa2dGmm', 'USER'
-WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'user@example.com');
-
-
--- Insert some sample products.
+-- Insert some products.
 INSERT INTO products (name, description, price, stock_quantity)
 SELECT 'Quantum Laptop Pro', 'A sleek and powerful laptop with 16GB RAM and 1TB SSD.', 1499.99, 50
 WHERE NOT EXISTS (SELECT 1 FROM products WHERE name = 'Quantum Laptop Pro');

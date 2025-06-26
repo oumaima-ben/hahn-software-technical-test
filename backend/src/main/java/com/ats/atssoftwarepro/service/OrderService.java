@@ -8,4 +8,5 @@ import java.util.List;
 public interface OrderService {
     OrderRecord createOrder(OrderRequest orderRequest);
     List<OrderRecord> getMyOrders();
+    void deleteOrder(Long orderId);
 }

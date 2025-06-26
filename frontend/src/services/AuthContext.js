@@ -1,50 +1,55 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // You may need to install this: npm install jwt-decode
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+export function AuthProvider({ children }) {
+  // === THE FIX ===
+  // Start with a null token by default. This removes all persistence.
+  const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (token) {
-      try {
+    // This effect now only runs when the token changes in memory.
+    try {
+      if (token) {
         const decodedUser = jwtDecode(token);
         setUser({
           email: decodedUser.sub,
-          roles: decodedUser.roles || [],
+          roles: decodedUser.roles || decodedUser.authorities || [],
         });
-        localStorage.setItem("token", token);
-      } catch (error) {
-        console.error("Invalid token:", error);
+        // We no longer save the token to browser storage here.
+      } else {
         setUser(null);
-        localStorage.removeItem("token");
       }
-    } else {
+    } catch (error) {
+      console.error("Invalid token:", error);
       setUser(null);
-      localStorage.removeItem("token");
     }
   }, [token]);
 
   const login = (newToken) => {
+    // When a user logs in, we set the token in React's state.
     setToken(newToken);
   };
 
   const logout = () => {
+    // Logout simply clears the token from React's state.
     setToken(null);
   };
 
   const isAuthenticated = !!user;
   const isAdmin = user?.roles.includes("ADMIN");
 
-  return (
-    <AuthContext.Provider
-      value={{ token, user, login, logout, isAuthenticated, isAdmin }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
+  const value = { token, user, login, logout, isAuthenticated, isAdmin };
 
-export const useAuth = () => useContext(AuthContext);
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
