@@ -1,5 +1,6 @@
 -- This script defines the complete database schema and will be run on startup.
 
+
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS products;
@@ -48,10 +49,6 @@ CREATE TABLE order_items (
 
 
 ----------------------------
--- This script will be executed on application startup to populate the database.
--- It will only run if the tables are empty to avoid inserting duplicate data.
-
--- Note: Passwords are encrypted using BCrypt. The plain text for both is "password123".
 
 -- Insert an ADMIN user if one doesn't already exist
 INSERT INTO users (first_name, last_name, email, password, role)

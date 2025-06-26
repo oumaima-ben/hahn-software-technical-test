@@ -34,17 +34,14 @@ public class SecurityConfig {
     private static final String[] WHITE_LIST_URLS = {
             "/api/auth/**",
             "/api/products",
-            "/api/products/{id}",
+            "/api/products/**",
             //  SWAGGER UI
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/swagger-resources",
             "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
             "/swagger-ui/**",
-            "/webjars/**",
             "/swagger-ui.html"
     };
 
@@ -61,6 +58,7 @@ public class SecurityConfig {
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return http.build();
     }
 
@@ -71,7 +69,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(crosProperties.getAllowedOrigins().split(",")));
         configuration.setAllowedMethods(List.of(crosProperties.getAllowedMethods().split(",")));
         configuration.setAllowedHeaders(List.of(crosProperties.getAllowedHeaders().split(",")));
-        configuration.setAllowCredentials(crosProperties.isAllowCredentials());
+        configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(List.of("Content-Disposition"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

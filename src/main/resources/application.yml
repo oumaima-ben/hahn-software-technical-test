@@ -9,7 +9,6 @@ spring:
 
   sql:
     init:
-      # This ensures schema.sql and data.sql are always run on startup.
       mode: always
 
   # JPA/Hibernate Configuration
@@ -38,7 +37,7 @@ application:
 
 web:
   cors:
-    allowed-origins: "http://localhost:3000"
-    allowed-methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+    allowed-origins: "http://localhost:5173,http://localhost:80,http://localhost:443"
+    allowed-methods: "*"
     allowed-headers: "*"
     allow-credentials: true
