@@ -2,115 +2,87 @@
 
 Technical Test - CRUD Application Development (Java + React)
 
-This repository contains the complete backend for a simple e-commerce application. It is built with Java, Spring Boot, and PostgreSQL, and it is fully containerized with Docker. The API provides endpoints for user authentication, product management, and order processing, with role-based access control.
+Full-Stack E-Commerce Application (Spring Boot + React)
+This is a complete full-stack application built to demonstrate a modern, professional web development workflow. It features a Java/Spring Boot backend, a React frontend, a PostgreSQL database, and is fully containerized with Docker for easy setup and deployment.
 
-## Key Features
+Core Features
+Backend: Secure REST API with JWT authentication and role-based access control (USER/ADMIN).
 
-- **Secure Authentication**: JWT-based authentication for stateless and secure API access.
-- **Role-Based Access Control (RBAC)**: Differentiated permissions for regular `USER`s and `ADMIN`s.
-- **RESTful API**: A clean, well-structured API for managing users, products, and orders.
-- **Data Persistence**: Uses Spring Data JPA and Hibernate with a PostgreSQL database.
-- **Containerized**: Fully containerized with Docker and Docker Compose for easy setup and deployment.
-- **Live API Documentation**: Integrated with Swagger (OpenAPI 3) for interactive API exploration and testing.
-- **Demo Data**: Includes an SQL script to automatically seed the database with sample users and products.
+Frontend: Responsive UI built with React, Vite, and Tailwind CSS, featuring a product catalog, user authentication, and a shopping cart/order system.
 
----
+Database: Relational data persistence using PostgreSQL, automatically seeded with demo data on startup.
 
-## Tech Stack
+Containerization: The entire application stack (Frontend Server, Backend API, Database) is managed by Docker Compose for one-command setup.
 
-- **Backend**: Java 17, Spring Boot 3, Spring Security, Spring Data JPA
-- **Database**: PostgreSQL
-- **Build Tool**: Gradle
-- **Containerization**: Docker, Docker Compose
-- **API Documentation**: SpringDoc OpenAPI (Swagger)
+Swagger API Documentation: Live, interactive API documentation is provided via Swagger UI using this link: http://localhost:8080/swagger-ui/index.html.
 
----
+Project Structure
+The repository is organized into two main folders, with the main docker-compose.yml file at the root:
 
-## Getting Started
+/backend: Contains the Spring Boot application source code.
 
-You can run this project in two ways: using Docker (recommended for ease of use) or locally with a manual database setup.
+/frontend: Contains the React application source code.
 
-### Option 1: Running with Docker (Recommended)
+Getting Started: Running the Full Application
+This guide provides the steps to build and run the entire full-stack application using Docker. This is the recommended method.
 
-This is the simplest way to get the entire application stack (app + database) running.
+Prerequisites
+Docker and Docker Compose installed and running on your machine.
 
-**Prerequisites:**
+Java 17 and Gradle (for building the backend).
 
-- Docker and Docker Compose installed and running.
-- Java 17 & Gradle (only for building the initial JAR file).
+Node.js and npm (for building the frontend).
 
-**Steps:**
+Step-by-Step Instructions
+Important: These commands must be run from the root directory of the project (e-comerce-hahn-pro/).
 
-1.  **Clone the repository:**
+Step 1: Build the Backend Application
 
-    ```bash
-    git clone <your-repo-url>
-    cd <your-repo-name>
-    ```
+First, clone the repository
 
-2.  **Build the application JAR:**
-    This command compiles your code into an executable file that Docker can use.
+git clone https://github.com/oumaima-ben/hahn-software-technical-test
+cd hahn-software-technical-test
 
-    ```bash
-    ./gradlew bootJar
-    ```
+	
+Next, we need to compile the Java code and create the executable .jar file that the backend's Docker image requires.
 
-3.  **Launch the application stack:**
-    This single command will build the app image, start the database container, and start the application container.
-    ```bash
-    docker-compose up --build
-    ```
+# Navigate into the backend directory from the project root
+cd backend
 
-The API will be available at `http://localhost:8080`.
+# Run the Gradle build command
+./gradlew bootJar
 
-### Option 2: Running Locally (Manual Setup)
+# Navigate back to the root directory
+cd ..
 
-Use this method if you want to run the application directly from your IDE without Docker.
+This command creates a build/libs/ folder inside your backend directory containing the application JAR file.
 
-**Prerequisites:**
+Step 2: Build the Frontend Application
 
-- Java 17 & Gradle
-- A PostgreSQL server running locally.
+Next, we need to build the optimized static files for the React application, which the frontend's Docker image requires.
 
-**Steps:**
+# Navigate into the frontend directory from the project root
+cd frontend
 
-1.  **Create a database:** In your local PostgreSQL server, create a new database named `ats`.
-2.  **Configure the application:** Open `src/main/resources/application.yml` and ensure the `datasource` properties match your local database credentials.
-3.  **Run the application:** You can run the main class from your IDE (like IntelliJ)
+# Install dependencies (only needed once per project setup)
+npm install
 
-The API will be available at `http://localhost:8080`.
+# Run the React build command
+npm run build
 
----
+# Navigate back to the root directory
+cd ..
 
-## API Documentation (Swagger UI)
+This command creates a dist/ folder inside your frontend directory containing the final HTML, CSS, and JS files.
 
-This project includes live, interactive API documentation. Once the application is running, you can access it at:
+Step 3: Launch Everything with Docker Compose
 
-**[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
+Now that both the backend and frontend artifacts have been built, you can start the entire application stack with a single command from the project root.
 
-### How to Use Swagger for Testing
+docker-compose up --build
 
-1.  **Explore Endpoints**: The UI lists all available endpoints, categorized by their controller (`Authentication`, `Products`, `Orders`).
-2.  **Authenticate**:
-    - At the top right, click the **Authorize** button.
-    - First, get a token by using the `/api/auth/signin` endpoint. Provide the credentials for one of the demo users (e.g., `admin@example.com` or `john.doe@example.com` with password `password123`).
-    - Copy the `token` value from the response.
-    - Go back to the **Authorize** dialog, paste the token into the `Value` field, and click **Authorize**. You are now authenticated for all subsequent requests made from the UI.
-3.  **Test Endpoints**:
-    - Click on any endpoint to expand it.
-    - Click **Try it out**.
-    - Fill in any required parameters (like an ID or a request body).
-    - Click **Execute**.
+up: Starts all services defined in docker-compose.yml.
 
-You will see the full request, the response code, and the response body directly in your browser.
+--build: Forces Docker to build fresh images for your frontend and backend using the artifacts you just created in steps 1 and 2.
 
-### Demo Users
-
-The `data.sql` script creates the following users. The password for both is `password123`.
-
-- **Admin User**:
-  - **Email**: `admin@example.com`
-  - **Role**: `ADMIN` (can access all endpoints, including creating/deleting products)
-- **Normal User**:
-  - **Email**: `john.doe@example.com`
-  - **Role**: `USER` (can view products and manage their own orders)
+Docker Compose will now start the database, backend, and frontend containers.
