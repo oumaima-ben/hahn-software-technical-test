@@ -1,0 +1,43 @@
+# Database Configuration
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ats
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: always
+
+  # JPA/Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  docker:
+    compose:
+      enabled: false
+
+config:
+  import:
+    - optional:classpath:application-docker.yml
+
+
+# Custom Application Properties
+application:
+  security:
+    jwt:
+      secret-key: a2V5Zm9yYXV0aGVudGljYXRpb25wdXJwb3Nlc3dpbGxiZWxvbmc=
+      expiration: 86400000 # 24 hours in milliseconds
+
+web:
+  cors:
+    allowed-origins: "http://localhost:5173,http://localhost:80,http://localhost:443"
+    allowed-methods: "*"
+    allowed-headers: "*"
+    allow-credentials: true
