@@ -1,12 +1,6 @@
 
 
-DROP TABLE IF EXISTS order_items;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS users;
-
-
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
                        id BIGSERIAL PRIMARY KEY,
                        first_name VARCHAR(255) NOT NULL,
                        last_name VARCHAR(255) NOT NULL,
@@ -16,7 +10,7 @@ CREATE TABLE users (
                        role VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
                           id BIGSERIAL PRIMARY KEY,
                           name VARCHAR(255) NOT NULL,
                           description TEXT,
@@ -24,7 +18,7 @@ CREATE TABLE products (
                           stock_quantity INT NOT NULL
 );
 
-CREATE TABLE orders (
+CREATE TABLE IF NOT EXISTS orders (
                         id BIGSERIAL PRIMARY KEY,
                         user_id BIGINT,
                         item_description VARCHAR(255),
@@ -34,7 +28,7 @@ CREATE TABLE orders (
                         CONSTRAINT fk_user FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE order_items (
+CREATE TABLE IF NOT EXISTS order_items (
                              id BIGSERIAL PRIMARY KEY,
                              order_id BIGINT NOT NULL,
                              product_id BIGINT,

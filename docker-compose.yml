@@ -1,7 +1,6 @@
 # docker-compose.yml
 services:
-
-  # Postgres Service
+  # The PostgreSQL Database Service
   db:
     image: postgres:14-alpine
     container_name: postgres-db
@@ -21,10 +20,11 @@ services:
       timeout: 5s
       retries: 5
 
-  # Spring Boot Application Service
+  # The Spring Boot Backend Service
   app:
-    build: .
-    container_name: ats-software-pro
+    build:
+      context: ./backend 
+    container_name: ats-software-pro-backend
     ports:
       - "8080:8080"
     environment:
@@ -37,9 +37,22 @@ services:
     networks:
       - ecommerce-network
 
+  # === NEW: The React Frontend Service ===
+  frontend:
+    build:
+      context: ./frontend 
+    container_name: ats-software-pro-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - app
+    networks:
+      - ecommerce-network
+
 networks:
   ecommerce-network:
     driver: bridge
 
+# Define the volume for persistent database data
 volumes:
   postgres-data:

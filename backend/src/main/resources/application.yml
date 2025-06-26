@@ -14,7 +14,7 @@ spring:
   # JPA/Hibernate Configuration
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -23,9 +23,9 @@ spring:
     compose:
       enabled: false
 
-config:
-  import:
-    - optional:classpath:application-docker.yml
+#  config:
+#    import:
+#      - optional:classpath:application-docker.yml
 
 
 # Custom Application Properties

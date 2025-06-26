@@ -85,15 +85,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public void deleteOrder(Long orderId) {
-        User currentUser = getCurrentUser();
+
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
 
-        if (!order.getUser().getId().equals(currentUser.getId())) {
-            throw new AppException("You are not authorized to delete this order.", HttpStatus.FORBIDDEN);
-        }
-
-        //Restore the stock for each item in the cancelled order.
         for (OrderItem item : order.getOrderItems()) {
             Product product = item.getProduct();
             if (product != null) {
@@ -102,7 +97,15 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
+        User user = order.getUser();
+
+        //Remove the connection between order and user
+        if (user != null) {
+            user.getOrders().remove(order);
+        }
+
         orderRepository.delete(order);
+
     }
 
     private User getCurrentUser() {
